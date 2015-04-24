@@ -7,15 +7,32 @@
             #+clj  [schema.core :as s]
             #+cljs [schema.core :as s :include-macros true]))
 
-(defn validate-try [schema x]
-  (try (s/validate schema x)
+(defn make-dependency-map
+  "ensures dependencies are a map. "
+  [dependencies]
+  (cond
+    (map? dependencies)
+    dependencies
+    (vector? dependencies)
+    (zipmap dependencies dependencies)
+    :else
+    (throw (ex-info "Dependencies must be a map or vector"
+                    {:reason ::invalid-dependencies
+                     :dependencies dependencies}))))
+
+(defn validate-try
+  "like schema/validate but returns nil instead of throwing on failure"
+  [schema value]
+  (try (s/validate schema value)
        (catch #+clj Exception #+cljs js/Error e
          nil)))
 
-(defn filter-system-by-schema [schema system]
-  (->> system
-       (filter (comp (partial validate-try schema)
-                     second))
+(defn filter-system-by-schema
+  "filter"
+  [schema system]
+  (->> (for [[key component] system
+             :when (validate-try schema component)]
+         [key component])
        (into {})))
 
 (defn system-using-schema

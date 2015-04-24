@@ -43,9 +43,7 @@
       :license {"Eclipse Public License" "http://www.eclipse.org/legal/epl-v10.html"}
       :url "https://github.com/IB5k/component-schema"
       :scm {:url "https://github.com/IB5k/component-schema"}}
- cljs-test-node-runner {:namespaces '[ib5k.component.using-test]}
- cljs {:output-to "public/js/main.js"
-       :compiler-options {:warnings {:single-segment-namespace false}}})
+ cljs-test-node-runner {:namespaces '[ib5k.component.using-test]})
 
 (deftask test-all
   "test clj and cljs"
