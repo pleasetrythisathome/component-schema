@@ -4,7 +4,8 @@
              :as component :refer [system-map system-using using]]
             #+clj  [plumbing.core :refer :all]
             #+cljs [plumbing.core :refer (map-vals) :refer-macros (?> <-)]
-            [schema.core :as s]))
+            #+clj  [schema.core :as s]
+            #+cljs [schema.core :as s :include-macros true]))
 
 (defn validate-try [schema x]
   (try (s/validate schema x)

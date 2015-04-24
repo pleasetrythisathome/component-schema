@@ -43,7 +43,7 @@
       :license {"Eclipse Public License" "http://www.eclipse.org/legal/epl-v10.html"}
       :url "https://github.com/IB5k/component-schema"
       :scm {:url "https://github.com/IB5k/component-schema"}}
- cljs-test-node-runner {:namespaces '[component-schema.main-test]}
+ cljs-test-node-runner {:namespaces '[ib5k.component.using-test]}
  cljs {:output-to "public/js/main.js"
        :compiler-options {:warnings {:single-segment-namespace false}}})
 
@@ -68,6 +68,6 @@
    (watch)
    (notify)
    (cljx)
-   (cljs-repl :port 3458)
+   (cljs-repl :port 3448)
    (cljs :source-map true
          :pretty-print true)))
