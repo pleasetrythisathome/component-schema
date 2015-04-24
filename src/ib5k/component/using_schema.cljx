@@ -47,6 +47,11 @@
               (apply zipmap)))
        (apply merge)))
 
+(defn remove-self-dependencies [dependency-map]
+  (->> (for [[key depedencies] dependency-map]
+         [key (dissoc depedencies key)])
+       (into {})))
+
 (defn system-using-schema
   "same as component/system using but allows prismatic schema to specify components
   ex. {:webrouter [:public-resources (s/protocol RouteProvider)]}
@@ -54,4 +59,5 @@
   [system dependency-map]
   (->> dependency-map
        (map-vals (partial expand-dependency-map-schema system))
+       (remove-self-dependencies)
        (system-using system)))

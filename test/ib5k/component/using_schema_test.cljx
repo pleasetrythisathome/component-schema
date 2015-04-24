@@ -53,6 +53,11 @@
          (u/expand-dependency-map-schema system [(s/both (s/protocol ITest)
                                                          {:prop (s/enum ::value)})]))))
 
+(deftest remove-self-deps
+  (is (= {:test {:other :other}}
+         (u/remove-self-dependencies {:test {:test :test
+                                             :other :other}}))))
+
 (deftest system-using-schema
   (is (= ::value
          (->> {:uses-test [(s/both (s/protocol ITest)
