@@ -1,4 +1,4 @@
-(ns ib5k.component.using
+(ns ib5k.component.using-schema
   (:require [#+clj  com.stuartsierra.component
              #+cljs quile.component
              :as component :refer [system-map system-using using]]

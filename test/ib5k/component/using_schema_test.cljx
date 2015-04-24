@@ -1,12 +1,15 @@
-(ns ib5k.component.using-test
-  (:require [ib5k.component.using :as u]
+(ns ib5k.component.using-schema-test
+  (:require [ib5k.component.using-schema :as u]
             #+clj  [clojure.test :refer :all]
-            #+cljs [cljs.test :refer [] :refer-macros [deftest is]]
+            #+cljs [cemerick.cljs.test :as t]
             [#+clj  com.stuartsierra.component
              #+cljs quile.component
              :as component]
             #+clj  [schema.core :as s]
-            #+cljs [schema.core :as s :include-macros true]))
+            #+cljs [schema.core :as s :include-macros true])
+  #+cljs
+  (:require-macros [cemerick.cljs.test
+                    :refer (is deftest with-test run-tests testing test-var)]))
 
 (defprotocol ITest)
 

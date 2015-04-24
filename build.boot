@@ -8,8 +8,7 @@
                    [prismatic/plumbing "0.4.2"]
                    [prismatic/schema "0.4.0"]]
                  (mapv #(conj % :scope "test")
-                       '[[org.clojure/test.check "0.7.0"]
-                         [com.cemerick/clojurescript.test "0.3.3"]
+                       '[[com.cemerick/clojurescript.test "0.3.3"]
                          [adzerk/bootlaces "0.1.11"]
                          [adzerk/boot-cljs "0.0-2814-4"]
                          [adzerk/boot-cljs-repl "0.1.10-SNAPSHOT"]
@@ -33,7 +32,7 @@
  '[deraen.boot-cljx           :refer :all]
  '[jeluard.boot-notify        :refer :all])
 
-(def +version+ "0.1.0-SNAPSHOT")
+(def +version+ "0.1.1-SNAPSHOT")
 (bootlaces! +version+)
 
 (task-options!
@@ -43,7 +42,8 @@
       :license {"Eclipse Public License" "http://www.eclipse.org/legal/epl-v10.html"}
       :url "https://github.com/IB5k/component-schema"
       :scm {:url "https://github.com/IB5k/component-schema"}}
- cljs-test-node-runner {:namespaces '[ib5k.component.using-test]})
+ cljs-test-node-runner {:namespaces '[ib5k.component.using-schema-test
+                                      ib5k.component.ctr-test]})
 
 (deftask test-all
   "test clj and cljs"
