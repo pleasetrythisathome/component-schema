@@ -35,26 +35,23 @@
          [key component])
        (into {})))
 
+(defn expand-dependency-map-schema
+  "expand schema definitions within dependency vectors or map into the system keys that satify them.
+  ex. [:my-component (s/protocol MyProtocol)]
+  map forms should use identical schema for keys and values
+  ex. {:my-component :my-component, (s/protocol MyProtocol) (s/protocol MyProtocol)}"
+  [system dependency-schema]
+  (->> (for [schema (make-dependency-map dependency-schema)]
+         (->> schema
+              (map #(if (keyword? %) [%] (keys (filter-system-by-schema % system))))
+              (apply zipmap)))
+       (apply merge)))
+
 (defn system-using-schema
   "same as component/system using but allows prismatic schema to specify components
   ex. {:webrouter [:public-resources (s/protocol RouteProvider)]}
   components are automatically prevented from depending on themselves"
-  [system using]
-  (->> (for [[cmp-key using] using]
-         (let [using (as-> using $
-                       (?> $ (vector? $) (zipmap $)))
-               [using using-schema] (->> ((juxt filter remove) (comp keyword? second) using)
-                                         (map (partial into {})))]
-           (->> (for [[key cmps] (->> using-schema
-                                      (map-vals (fn [schema]
-                                                  (->> system
-                                                       (filter-system-by-schema schema)
-                                                       keys))))]
-                  (if (keyword? key)
-                    (zipmap (repeat key) cmps)
-                    (zipmap cmps cmps)))
-                (apply merge using)
-                (<- (dissoc cmp-key))
-                (hash-map cmp-key))))
-       (apply merge)
+  [system dependency-map]
+  (->> dependency-map
+       (map-vals (partial expand-dependency-map-schema system))
        (system-using system)))
