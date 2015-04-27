@@ -6,10 +6,13 @@
              #+cljs quile.component
              :as component]
             #+clj  [schema.core :as s]
-            #+cljs [schema.core :as s :include-macros true])
+            #+cljs [schema.core :as s :include-macros true]
+            [schema.test])
   #+cljs
   (:require-macros [cemerick.cljs.test
-                    :refer (is deftest with-test run-tests testing test-var)]))
+                    :refer (is deftest with-test run-tests testing test-var use-fixtures)]))
+
+(use-fixtures :once schema.test/validate-schemas)
 
 (defprotocol ITest)
 
