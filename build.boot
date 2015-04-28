@@ -21,7 +21,7 @@
                          [org.clojure/tools.nrepl "0.2.10"]
                          [weasel "0.7.0-SNAPSHOT"]])))
  :source-paths #{"src"}
- :resource-paths #(conj % "resources"))
+ :resource-paths #(conj % "resources" "src"))
 
 (require
  '[adzerk.bootlaces           :refer :all]
