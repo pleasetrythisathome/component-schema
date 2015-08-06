@@ -1,16 +1,19 @@
-(ns ib5k.component.using-schema-test
-  (:require [ib5k.component.using-schema :as u]
-            #+clj  [clojure.test :refer :all]
-            #+cljs [cemerick.cljs.test :as t]
-            [#+clj  com.stuartsierra.component
-             #+cljs quile.component
+(ns ib5k.component.schema-test
+  (:require [ib5k.component.schema :as cs]
+            [#?(:clj
+                com.stuartsierra.component
+                :cljs
+                quile.component)
              :as component]
-            #+clj  [schema.core :as s]
-            #+cljs [schema.core :as s :include-macros true]
+            [schema.core :as s #?@(:cljs [:include-macros true])]
+            #?(:clj
+               [clojure.test :refer :all]
+               :cljs
+               [cemerick.cljs.test :as t])
             [schema.test])
-  #+cljs
-  (:require-macros [cemerick.cljs.test
-                    :refer (is deftest with-test run-tests testing test-var use-fixtures)]))
+  #?(:cljs
+     (:require-macros [cemerick.cljs.test
+                       :refer (is deftest with-test run-tests testing test-var)])))
 
 (use-fixtures :once schema.test/validate-schemas)
 
@@ -29,17 +32,17 @@
 
 (deftest make-deps
   (is (= {:test :test}
-         (u/make-dependency-map [:test])
-         (u/make-dependency-map {:test :test})))
-  (is (thrown? #+clj Exception #+cljs js/Error
-               (u/make-dependency-map :test))))
+         (cs/make-dependency-map [:test])
+         (cs/make-dependency-map {:test :test})))
+  (is (thrown? #?(:clj Exception :cljs js/Error)
+               (cs/make-dependency-map :test))))
 
 (deftest filter-system
   (is (= #{:test :other-test}
-         (set (keys (u/filter-system-by-schema (s/protocol ITest) system)))))
+         (set (keys (cs/filter-system-by-schema (s/protocol ITest) system)))))
   (is (= #{:other-test}
          (->> system
-              (u/filter-system-by-schema (s/both (s/protocol ITest)
+              (cs/filter-system-by-schema (s/both (s/protocol ITest)
                                                  {:prop (s/enum ::value)}))
               keys
               set))))
@@ -48,24 +51,24 @@
   (is (= {:my-component :my-component
           :test :test
           :other-test :other-test}
-         (u/expand-dependency-map-schema system [:my-component (s/protocol ITest)])
-         (u/expand-dependency-map-schema system {:my-component :my-component
+         (cs/expand-dependency-map-schema system [:my-component (s/protocol ITest)])
+         (cs/expand-dependency-map-schema system {:my-component :my-component
                                                  (s/protocol ITest) (s/protocol ITest)})))
 
   (is (= {:other-test :other-test}
-         (u/expand-dependency-map-schema system [(s/both (s/protocol ITest)
+         (cs/expand-dependency-map-schema system [(s/both (s/protocol ITest)
                                                          {:prop (s/enum ::value)})]))))
 
 (deftest remove-self-deps
   (is (= {:test {:other :other}}
-         (u/remove-self-dependencies {:test {:test :test
+         (cs/remove-self-dependencies {:test {:test :test
                                              :other :other}}))))
 
 (deftest system-using-schema
   (is (= ::value
          (->> {:uses-test [(s/both (s/protocol ITest)
                                    {:prop (s/enum ::value)})]}
-              (u/system-using-schema system)
+              (cs/system-using-schema system)
               (component/start)
               :uses-test
               :other-test

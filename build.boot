@@ -32,7 +32,7 @@
  '[deraen.boot-cljx           :refer :all]
  '[jeluard.boot-notify        :refer :all])
 
-(def +version+ "0.1.2-SNAPSHOT")
+(def +version+ "0.1.3-SNAPSHOT")
 (bootlaces! +version+)
 
 (task-options!

@@ -1,7 +1,10 @@
 (ns ib5k.component.ctr
-  (:require #+clj  [com.stuartsierra.component :as component]
-            #+cljs [quile.component :as component]
-            [schema.core :as s :include-macros true]
+  (:require [#?(:clj
+                com.stuartsierra.component
+                :cljs
+                quile.component)
+             :as component]
+            [schema.core :as s #?@(:cljs [:include-macros true])]
             [schema.utils :refer [class-schema]]))
 
 (defn wrap-kargs
@@ -39,11 +42,11 @@
     (when-let [schema (:schema (class-schema klass))]
       (s/validate (select-keys schema (keys opts)) (select-keys opts (keys schema))))
     (-> (f opts)
-        #+cljs (with-meta {:class klass}))))
+        #?(:cljs (with-meta {:class klass})))))
 
 (defn validate-class
   [instance]
-  (when-let [schema (some-> instance #+cljs meta #+cljs :class #+clj class class-schema :schema)]
+  (when-let [schema (some-> instance #?@(:clj [class] :cljs [meta :class]) class-schema :schema)]
     (->> (select-keys instance (map ensure-key (keys schema)))
          (s/validate schema)))
   instance)
