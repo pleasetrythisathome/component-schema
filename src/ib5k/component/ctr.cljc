@@ -44,15 +44,15 @@
     (-> (f opts)
         #?(:cljs (with-meta {:class klass})))))
 
+(defn wrap-using
+  [f using]
+  (fn [opts]
+    (-> (f opts)
+        (component/using using))))
+
 (defn validate-class
   [instance]
   (when-let [schema (some-> instance #?@(:clj [class] :cljs [meta :class]) class-schema :schema)]
     (->> (select-keys instance (map ensure-key (keys schema)))
          (s/validate schema)))
   instance)
-
-(defn wrap-using
-  [f using]
-  (fn [opts]
-    (-> (f opts)
-        (component/using using))))

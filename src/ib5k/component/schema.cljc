@@ -1,11 +1,14 @@
 (ns ib5k.component.schema
-  (:require [#+clj  com.stuartsierra.component
-             #+cljs quile.component
-             :as component :refer [system-map system-using using]]
-            #+clj  [plumbing.core :refer :all]
-            #+cljs [plumbing.core :refer (map-vals) :refer-macros (?> <-)]
-            #+clj  [schema.core :as s]
-            #+cljs [schema.core :as s :include-macros true]))
+  (:require [#?(:clj
+                com.stuartsierra.component
+                :cljs
+                quile.component)
+             :as component]
+            #?(:clj
+               [plumbing.core :refer :all]
+               :cljs
+               [plumbing.core :refer (map-vals) :refer-macros (?> <-)])
+            [schema.core :as s #?@(:cljs [:include-macros true])]))
 
 (s/defschema Dependency
   (s/either s/Keyword
@@ -36,7 +39,7 @@
   [schema :- (s/protocol s/Schema)
    value :- s/Any]
   (try (s/validate schema value)
-       (catch #+clj Exception #+cljs js/Error e
+       (catch #?(:clj Exception :cljs js/Error)
          nil)))
 
 (s/defn filter-system-by-schema :- SystemMap
