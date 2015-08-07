@@ -71,4 +71,4 @@
   (->> system-dependencies
        (map-vals (partial expand-dependency-map-schema system))
        (remove-self-dependencies)
-       (system-using system)))
+       (component/system-using system)))
