@@ -1,8 +1,8 @@
 (set-env!
  :dependencies (vec
                 (concat
-                 '[[org.clojure/clojure "1.7.0-beta1"]
-                   [org.clojure/clojurescript "0.0-3211"]
+                 '[[org.clojure/clojure "1.8.0-alpha4"]
+                   [org.clojure/clojurescript "1.7.48"]
                    [com.stuartsierra/component "0.2.3"]
                    [quile/component-cljs "0.2.4"]
                    [prismatic/plumbing "0.4.2"]
