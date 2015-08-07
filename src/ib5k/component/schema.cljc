@@ -34,20 +34,12 @@
                     {:reason ::invalid-dependencies
                      :dependencies dependencies}))))
 
-(s/defn validate-try :- s/Any
-  "like schema/validate but returns nil instead of throwing on failure"
-  [schema :- (s/protocol s/Schema)
-   value :- s/Any]
-  (try (s/validate schema value)
-       (catch #?(:clj Exception :cljs js/Error)
-         nil)))
-
 (s/defn filter-system-by-schema :- SystemMap
   "filter"
   [schema :- (s/protocol s/Schema)
    system :- SystemMap]
   (->> (for [[key component] system
-             :when (validate-try schema component)]
+             :when (not (s/check schema component))]
          [key component])
        (into {})))
 
