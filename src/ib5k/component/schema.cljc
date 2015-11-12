@@ -1,9 +1,5 @@
 (ns ib5k.component.schema
-  (:require [#?(:clj
-                com.stuartsierra.component
-                :cljs
-                quile.component)
-             :as component]
+  (:require [com.stuartsierra.component :as component]
             #?(:clj
                [plumbing.core :refer :all]
                :cljs
@@ -11,12 +7,12 @@
             [schema.core :as s #?@(:cljs [:include-macros true])]))
 
 (s/defschema Dependency
-  (s/either s/Keyword
-            (s/protocol s/Schema)))
+  (s/cond-pre s/Keyword
+              (s/protocol s/Schema)))
 
 (s/defschema Dependencies
-  (s/either [Dependency]
-            {Dependency Dependency}))
+  (s/cond-pre [Dependency]
+              {Dependency Dependency}))
 
 (s/defschema SystemMap
   {s/Keyword s/Any})

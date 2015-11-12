@@ -1,19 +1,12 @@
 (ns ib5k.component.ctr-test
   (:require [ib5k.component.ctr :as ctr]
             [clojure.set :as set]
-            [#?(:clj
-                com.stuartsierra.component
-                :cljs
-                quile.component)
-             :as component]
+            [com.stuartsierra.component :as component]
             [schema.core :as s #?@(:cljs [:include-macros true])]
             #?(:clj
                [clojure.test :refer :all]
                :cljs
-               [cemerick.cljs.test :as t]))
-  #?(:cljs
-     (:require-macros [cemerick.cljs.test
-                       :refer (is deftest with-test run-tests testing test-var)])))
+               [cljs.test :as t :refer-macros (is deftest testing use-fixtures)])))
 
 (deftest kargs
   (let [f (ctr/wrap-kargs identity)]
@@ -30,11 +23,13 @@
 (s/defrecord TestRecord [num :- s/Num
                          str :- s/Str])
 
-(with-test (def new-test-record
-             (-> map->TestRecord
-                 (ctr/wrap-class-validation TestRecord)
-                 (ctr/wrap-defaults {:num 0})
-                 (ctr/wrap-kargs)))
+(def new-test-record
+  (-> map->TestRecord
+      (ctr/wrap-class-validation TestRecord)
+      (ctr/wrap-defaults {:num 0})
+      (ctr/wrap-kargs)))
+
+(deftest ctr-test
   (is (= (:num (new-test-record))
          0))
   (is (not (:str (new-test-record))))

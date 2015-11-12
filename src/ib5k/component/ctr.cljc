@@ -1,9 +1,5 @@
 (ns ib5k.component.ctr
-  (:require [#?(:clj
-                com.stuartsierra.component
-                :cljs
-                quile.component)
-             :as component]
+  (:require [com.stuartsierra.component :as component]
             [schema.core :as s #?@(:cljs [:include-macros true])]
             [schema.utils :refer [class-schema]]))
 
